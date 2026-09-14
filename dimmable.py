@@ -1,19 +1,16 @@
-# UNFINISHED CODE
-
-
-from gpiozero import RotaryEncoder, LED
+from gpiozero import RotaryEncoder, PWMLED
 from time import sleep
 
-rotor = RotaryEncoder(18, 17, wrap=True, max_steps=180) # DT goes to 16, CLK goes to 20
-rotor.steps = -180
+rotor = RotaryEncoder(17, 18, wrap=True, max_steps=75) # DT goes to 16, CLK goes to 20
 
 
-
-def dimLED():
-    led = LED(24)
-    while True:
-        led.value = rotor.steps / 180 # the value of led. value will change as you rotate the device
-        sleep(0.1) # sleep time is turn the led off but it off fast enough that blinking is unnoticeable
+led = PWMLED(24)
 
 while True:
+	if rotor.steps<0 and rotor.steps>-25:
+		rotor.steps=rotor.steps*0 # makes the value so it can't go below -1
+	elif rotor.steps>=-75 and rotor.steps<-50:
+		rotor.steps=75
+	led.value = rotor.steps / 75 # the value of led. value will change as you rotate the device
+	sleep(0.1) 
 	print(rotor.steps) # the value of rotor.steps will change as you rotate the device
